@@ -7,7 +7,7 @@ import { getRepository } from 'typeorm';
 
 @Module({
   controllers: [RegistrationController],
-  imports: [TypeOrmModule.forFeature([UserEntity]), AuthService],
-  exports: [AuthService],
+  imports: [TypeOrmModule.forFeature([UserEntity])],
+  providers: [AuthService],
 })
 export class AuthModule {}

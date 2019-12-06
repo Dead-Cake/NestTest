@@ -2,25 +2,25 @@ import { Get, Post, Body, Put, Delete, Param, Controller, UsePipes, Res, HttpSta
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 // import { UserEntity } from '../entity/User';
-// import { UserRO } from './user.interface';
 import { UserRegDTO} from './dto/userDTO';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 // import { User } from './user.decorator';
 
-@Controller('/authors')
+@Controller('auth')
 export class RegistrationController {
 
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/register')
+  @Post('register')
   async registerUser(@Res() res, @Body() user: UserRegDTO ) {
     const resultOfRegister = await this.authService.registration(user);
 
     if (resultOfRegister) {
-      res.status(HttpStatus.BAD_REQUEST).send('email must be unique');
+      res.status(HttpStatus.OK).send('register successful!');
 
     } else {
-      res.status(HttpStatus.OK).send('register successful!');
+      res.status(HttpStatus.BAD_REQUEST).send('email must be unique');
+
     }
   }
   //

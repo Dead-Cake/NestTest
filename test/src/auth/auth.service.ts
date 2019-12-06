@@ -14,7 +14,7 @@ export class AuthService {
       email: user.email,
     };
 
-    return await this.userRepository.findOne(findOneOptions);
+    return this.userRepository.findOne(findOneOptions);
   }
 
   async create(user: UserRegDTO) {
@@ -24,7 +24,7 @@ export class AuthService {
     userEntity.firstName = user.firstName;
     userEntity.password = user.password;
     userEntity.lastName = user.lastName;
-    return await this.userRepository.save(userEntity);
+    return this.userRepository.save(userEntity);
   }
 
   async registration(user: UserRegDTO): Promise<boolean> {
