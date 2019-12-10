@@ -1,13 +1,16 @@
-import { Repository } from 'typeorm';
+import {Repository} from 'typeorm';
 import {UserEntity} from '../entity/User';
-import { UserRegDTO } from './dto/userDTO';
-import { Inject, Injectable } from '@nestjs/common';
-import * as crypto from 'crypto';
+import {UserRegDTO} from './dto/userRegDTO';
+import {UserLogDTO} from './dto/UserLogDto';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HttpException } from '@nestjs/common/exceptions/http.exception';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+  constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>, private readonly jwtService: JwtService) {}
 
   async isExists(user: UserRegDTO): Promise<UserEntity> {
     const findOneOptions = {
@@ -32,12 +35,40 @@ export class AuthService {
 
     if (exists) {
       return false;
-      // const errors = {username: 'Username and email must be unique.'};
-      // throw new HttpException({message: 'Input data validation failed', errors}, HttpStatus.BAD_REQUEST);
-
     } else {
       await this.create(user);
       return true;
+    }
+  }
+
+  async login(user: UserLogDTO) {
+    const result = await this.findUser(user);
+    if (result > 0) {
+      const payload = { sub: result };
+
+      const token = await this.jwtService.sign(payload);
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+      return {token};
+    } else {
+      return {error: 'You not authorizen'};
+    }
+
+  }
+
+  async findUser(userDto: UserLogDTO): Promise<number> {
+    const userLoginDto = {
+      email: userDto.email,
+  };
+    const user = await this.userRepository.findOne(userLoginDto);
+    const result = await bcrypt.compare(userDto.password, user.password);
+
+      // res == true
+    if (result) {
+      return user.id;
+    } else {
+      return 0;
     }
   }
 }

@@ -1,4 +1,4 @@
-// @ts-ignore
+
 import { IsEmail, IsString, Length, IsNumber, IsNotEmpty } from 'class-validator';
 
 export class UserRegDTO {

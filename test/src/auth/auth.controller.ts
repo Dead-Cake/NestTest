@@ -1,10 +1,11 @@
-import { Get, Post, Body, Put, Delete, Param, Controller, UsePipes, Res, HttpStatus } from '@nestjs/common';
+import { Get, Post, Body, Put, Delete, Param, Controller, UsePipes, Res, HttpStatus, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
 // import { UserEntity } from '../entity/User';
-import { UserRegDTO} from './dto/userDTO';
+import { UserRegDTO} from './dto/userRegDTO';
+import {UserLogDTO} from './dto/UserLogDto';
+import { AuthGuard } from '@nestjs/passport';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
-// import { User } from './user.decorator';
 
 @Controller('auth')
 export class RegistrationController {
@@ -23,7 +24,17 @@ export class RegistrationController {
 
     }
   }
-  //
-  // @Post('login')
-  // async loginUser(@Res() res, @Body() user)
+
+  @Post('login')
+  async loginUser(@Res() res, @Body() user: UserLogDTO) {
+    const ResultOfLogin = await this.authService.login(user);
+    res.send(ResultOfLogin);
+  }
+
+  @UseGuards(AuthGuard('jwt')) //
+  @Post('profile')
+  async welcome(@Res() res, @Body() user: UserRegDTO) {
+    const resultOfWelcome = 'sdfs';
+    res.send(resultOfWelcome);
+  }
 }

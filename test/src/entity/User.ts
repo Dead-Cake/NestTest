@@ -1,5 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert} from 'typeorm';
 import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 
 @Entity('user')
 export class UserEntity {
@@ -20,7 +21,8 @@ export class UserEntity {
 
     @BeforeInsert()
     hashPassword() {
-        this.password = crypto.createHmac('sha256', this.password).digest('hex');
+        const salt = bcrypt.genSaltSync(10);
+        this.password = bcrypt.hashSync(this.password, salt);
     }
 
     @Column()
