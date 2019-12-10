@@ -1,5 +1,4 @@
 import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert} from 'typeorm';
-import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
 
 @Entity('user')
