@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne } from '
 import {CityEntity} from './CityEntity';
 
 @Entity('tenant')
-export class UserEntity {
+export class TenantEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

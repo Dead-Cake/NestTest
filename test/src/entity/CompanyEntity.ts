@@ -1,4 +1,5 @@
-import { BeforeInsert, Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {CityEntity} from './CityEntity';
 
 @Entity('company')
 export class CompanyEntity {
@@ -7,4 +8,7 @@ export class CompanyEntity {
 
   @Column()
   company: string;
+
+  @ManyToMany(type => CityEntity, city => city.companyId)
+  cityId: CityEntity[];
 }
